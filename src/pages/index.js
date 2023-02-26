@@ -2,10 +2,81 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+import { useEffect, useRef } from 'react';
+import '@tensorflow/tfjs-backend-webgl';
+// import * as faceMesh from '@mediapipe/face_mesh';
+
+
+import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
+// import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
+
+// tfjsWasm.setWasmPaths(
+//     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${
+//         tfjsWasm.version_wasm}/dist/`);
+
+// import '@tensorflow-models/face-detection';
+// import { createDetector } from '@tensorflow-models/face-detection';
 
 const inter = Inter({ subsets: ['latin'] })
 
+function setupCamera(videoRef) {
+  navigator.mediaDevices.getUserMedia({
+    video: {width: 640, height: 480, facingMode: 'user', frameRate: {
+      ideal: 60
+    }},
+    audio: false,
+  }).then(stream => {
+    videoRef.current.srcObject = stream;
+  });
+
+}
+
 export default function Home() {
+  const videoRef = useRef();
+  const canvasRef = useRef();
+  const canvasContextRef = useRef();
+
+  useEffect( () => {
+    if(videoRef.current){
+      setupCamera(videoRef);
+      
+
+
+      videoRef.current.addEventListener("loadeddata", () => {
+
+        // let detector = await faceLandmarksDetection.createDetector(faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh, {
+        //   runtime: 'mediapipe',
+        //   refineLandmarks: true,
+        //   maxFaces: 1,
+        //   solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@${
+        //       '0.4.1633559619'}`
+        // });
+        
+        setInterval(() => {
+          const ctx = canvasRef.current.getContext("2d");
+          ctx.drawImage(videoRef.current, 0, 0, 640, 480);
+          ctx.beginPath();
+          ctx.ellipse(320, 240, 150, 225, 0, 0, 2 * Math.PI);
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          // try {
+          //   const faces = await detector.estimateFaces(videoRef.current, {flipHorizontal: false});
+          //   console.log("faces", faces);
+          // } catch (error) {
+          //   detector.dispose();
+          //   detector = null;
+          //   alert(error);
+          // }
+      
+
+        }, 100);
+      });
+      
+    }
+  }, [Boolean(videoRef.current)]);
+
   return (
     <>
       <Head>
@@ -40,23 +111,8 @@ export default function Home() {
         </div>
 
         <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
+          <video id="video" ref={videoRef} style={{display: 'none'}} autoPlay />
+          <canvas width="640px" height="480px" id="canvas" ref={canvasRef} />
         </div>
 
         <div className={styles.grid}>
