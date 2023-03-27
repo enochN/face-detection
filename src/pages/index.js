@@ -65,7 +65,7 @@ export default function Home() {
               ctx2.drawImage(videoRef.current, 0, 0, 640, 480);
           const ctx = canvasRef.current.getContext("2d");
 
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.01)';
+          ctx.fillStyle = 'rgba(250, 250, 250, 0.01)';
           ctx.fillRect(0, 0, 640, 480);
 
           // Draw the overlay
@@ -138,7 +138,7 @@ export default function Home() {
         <div className={styles.center}>
           <video id="video" ref={videoRef} style={{display: 'none'}} autoPlay />
           <canvas width="640px" height="480px" id="canvas2" ref={canvasRef2} />
-          <canvas style={{position: 'absolute', opacity: 1}} width="640px" height="480px" id="canvas" ref={canvasRef} />
+          <canvas style={{position: 'absolute', opacity: 0.8}} width="640px" height="480px" id="canvas" ref={canvasRef} />
         </div>
 
         <div className={styles.grid}>
