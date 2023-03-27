@@ -34,12 +34,13 @@ function setupCamera(videoRef) {
 export default function Home() {
   const videoRef = useRef();
   const canvasRef = useRef();
+  const canvasRef2 = useRef();
   const canvasContextRef = useRef();
 
   useEffect( () => {
     if(videoRef.current){
       setupCamera(videoRef);
-      
+
 
 
       videoRef.current.addEventListener("loadeddata", () => {
@@ -51,14 +52,38 @@ export default function Home() {
         //   solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@${
         //       '0.4.1633559619'}`
         // });
-        
+
         setInterval(() => {
+          const ellipseRadiusX = 150;
+          const ellipseRadiusY = 225;
+          const circleCenter = {
+            x: 640 / 2,
+            y: 480 / 2
+          };
+          const circleRadius = 150;
+          const ctx2 = canvasRef2.current.getContext("2d");
+              ctx2.drawImage(videoRef.current, 0, 0, 640, 480);
           const ctx = canvasRef.current.getContext("2d");
-          ctx.drawImage(videoRef.current, 0, 0, 640, 480);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.01)';
+          ctx.fillRect(0, 0, 640, 480);
+
+          // Draw the overlay
+          ctx.fillStyle = 'rgba(255, 255, 255, 0)';
+          ctx.fillRect(0, 0, 640, 480);
+          ctx.save();
+
+          // Draw the circle cutout
           ctx.beginPath();
-          ctx.ellipse(320, 240, 150, 225, 0, 0, 2 * Math.PI);
+          ctx.ellipse(circleCenter.x, circleCenter.y, ellipseRadiusX, ellipseRadiusY, 0, 0, 2 * Math.PI);
+          ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.fill();
+
+          ctx.restore();
+
           ctx.strokeStyle = "white";
-          ctx.lineWidth = 3;
+          ctx.lineWidth = 6;
           ctx.stroke();
 
           // try {
@@ -69,11 +94,11 @@ export default function Home() {
           //   detector = null;
           //   alert(error);
           // }
-      
+
 
         }, 100);
       });
-      
+
     }
   }, [Boolean(videoRef.current)]);
 
@@ -112,7 +137,8 @@ export default function Home() {
 
         <div className={styles.center}>
           <video id="video" ref={videoRef} style={{display: 'none'}} autoPlay />
-          <canvas width="640px" height="480px" id="canvas" ref={canvasRef} />
+          <canvas width="640px" height="480px" id="canvas2" ref={canvasRef2} />
+          <canvas style={{position: 'absolute', opacity: 1}} width="640px" height="480px" id="canvas" ref={canvasRef} />
         </div>
 
         <div className={styles.grid}>
