@@ -137,7 +137,7 @@ export default function Home() {
 
         <div className={styles.center}>
           <video id="video" ref={videoRef} style={{display: 'none'}} autoPlay />
-          <canvas width="640px" height="480px" id="canvas2" ref={canvasRef2} />
+          <canvas width="640px" height="480px" style={{transform: 'scaleX(-1)'}} id="canvas2" ref={canvasRef2} />
           <canvas style={{position: 'absolute', opacity: 0.8}} width="640px" height="480px" id="canvas" ref={canvasRef} />
         </div>
 
