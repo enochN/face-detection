@@ -5,10 +5,10 @@ import styles from '@/styles/Home.module.css'
 import { useEffect, useRef } from 'react';
 import '@tensorflow/tfjs-backend-webgl';
 // import * as faceMesh from '@mediapipe/face_mesh';
-
-
-import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 // import * as faceLandmarksDetection from '@tensorflow-models/face-landmarks-detection';
+
+
+// import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 
 // tfjsWasm.setWasmPaths(
 //     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${
@@ -43,14 +43,13 @@ export default function Home() {
 
 
 
-      videoRef.current.addEventListener("loadeddata", () => {
+      videoRef.current.addEventListener("loadeddata", async () => {
 
         // let detector = await faceLandmarksDetection.createDetector(faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh, {
         //   runtime: 'mediapipe',
         //   refineLandmarks: true,
         //   maxFaces: 1,
-        //   solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@${
-        //       '0.4.1633559619'}`
+        //   solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@${faceMesh.VERSION}`
         // });
 
         setInterval(() => {
